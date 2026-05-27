@@ -6,523 +6,133 @@
 <title>職務経歴書ジェネレーター</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
-
   :root {
-    --primary: #1a1a2e;
-    --accent: #e94560;
-    --accent2: #0f3460;
-    --bg: #f8f7f4;
-    --surface: #ffffff;
-    --border: #e0ddd8;
-    --text: #1a1a1a;
-    --muted: #888;
-    --section-bg: #f0ede8;
+    --primary: #1a1a2e; --accent: #e94560; --accent2: #0f3460;
+    --bg: #f8f7f4; --surface: #ffffff; --border: #e0ddd8;
+    --text: #1a1a1a; --muted: #888; --section-bg: #f0ede8;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  header {
-    background: var(--primary);
-    color: white;
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  header h1 {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 20px;
-    font-weight: 400;
-    letter-spacing: 0.05em;
-  }
-  header .badge {
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 500;
-  }
-
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 32px 24px 80px;
-  }
-
-  .progress-bar {
-    display: flex;
-    gap: 0;
-    margin-bottom: 32px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .progress-step {
-    flex: 1;
-    padding: 12px 8px;
-    text-align: center;
-    font-size: 12px;
-    cursor: pointer;
-    background: var(--surface);
-    color: var(--muted);
-    border-right: 1px solid var(--border);
-    transition: all 0.2s;
-    font-weight: 500;
-  }
-  .progress-step:last-child { border-right: none; }
-  .progress-step.active {
-    background: var(--primary);
-    color: white;
-  }
-  .progress-step.done {
-    background: var(--accent2);
-    color: white;
-  }
-
-  .section-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    margin-bottom: 24px;
-  }
-
-  .section-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title .num {
-    background: var(--accent);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    flex-shrink: 0;
-  }
-
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  header { background: var(--primary); color: white; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; }
+  header .badge { background: var(--accent); color: white; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+  .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 8px; }
+  .section-title .num { background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
   .field-row.full { grid-template-columns: 1fr; }
   .field-row.three { grid-template-columns: 1fr 1fr 1fr; }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--primary);
-  }
-  label .req {
-    color: var(--accent);
-    margin-left: 3px;
-  }
-  label .hint {
-    color: var(--muted);
-    font-weight: 400;
-    font-size: 11px;
-    margin-left: 4px;
-  }
-
-  input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    background: white;
-    transition: border-color 0.2s;
-    color: var(--text);
-  }
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent2);
-  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 12px; font-weight: 500; color: var(--primary); }
+  label .req { color: var(--accent); margin-left: 3px; }
+  label .hint { color: var(--muted); font-weight: 400; font-size: 11px; margin-left: 4px; }
+  input[type="text"], input[type="tel"], input[type="email"], select, textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; background: white; transition: border-color 0.2s; color: var(--text); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent2); }
   textarea { resize: vertical; line-height: 1.7; }
-
-  .company-card {
-    background: var(--section-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 16px;
-    position: relative;
-  }
-  .company-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .company-num {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--accent2);
-  }
-  .btn-remove {
-    background: none;
-    border: 1px solid #ddd;
-    color: var(--muted);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .btn-remove:hover { border-color: var(--accent); color: var(--accent); }
-
-  .btn-add {
-    width: 100%;
-    padding: 12px;
-    border: 2px dashed var(--border);
-    border-radius: 10px;
-    background: none;
-    color: var(--accent2);
-    font-size: 13px;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 500;
-  }
-  .btn-add:hover { border-color: var(--accent2); background: rgba(15,52,96,0.04); }
-
-  .skill-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-  }
+  .company-card { background: var(--section-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .company-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .company-num { font-size: 13px; font-weight: 700; color: var(--accent2); }
+  .btn-remove { background: none; border: 1px solid #ddd; color: var(--muted); padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .btn-add { width: 100%; padding: 12px; border: 2px dashed var(--border); border-radius: 10px; background: none; color: var(--accent2); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+  .skill-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
   .skill-row input { flex: 1; }
-  .btn-skill-remove {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 18px;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-  }
-
-  .generate-section {
-    background: var(--primary);
-    border-radius: 12px;
-    padding: 28px;
-    color: white;
-    text-align: center;
-  }
-  .generate-section h3 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    font-family: 'Noto Serif JP', serif;
-    font-weight: 400;
-  }
-  .generate-section p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 20px;
-  }
-
-  .btn-generate {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 14px 40px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
-    letter-spacing: 0.05em;
-  }
+  .btn-skill-remove { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px; }
+  .generate-section { background: var(--primary); border-radius: 12px; padding: 28px; color: white; text-align: center; }
+  .generate-section h3 { font-size: 16px; margin-bottom: 8px; font-family: 'Noto Serif JP', serif; font-weight: 400; }
+  .generate-section p { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 20px; }
+  .btn-generate { background: var(--accent); color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s; letter-spacing: 0.05em; }
   .btn-generate:hover { opacity: 0.9; transform: translateY(-1px); }
   .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-  #output-section {
-    display: none;
-    margin-top: 32px;
-  }
+  #output-section { display: none; margin-top: 32px; }
   #output-section.visible { display: block; }
-
-  .output-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .output-header {
-    background: var(--accent2);
-    color: white;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+  .output-card { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .output-header { background: var(--accent2); color: white; padding: 16px 24px; }
   .output-header h3 { font-size: 14px; font-weight: 500; }
-  .btn-copy {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-
-  #output-text {
-    padding: 24px;
-    font-size: 13px;
-    line-height: 2;
-    white-space: pre-wrap;
-    max-height: 500px;
-    overflow-y: auto;
-    color: var(--text);
-  }
-
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .spinner {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 10px;
-    vertical-align: middle;
-  }
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+  .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 10px; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .download-row {
-    display: flex;
-    gap: 12px;
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-  }
-  .btn-dl {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    border: none;
-  }
-  .btn-dl:hover { opacity: 0.85; }
-  .btn-dl-txt { background: var(--accent2); color: white; }
-  .btn-dl-copy { background: var(--section-bg); color: var(--primary); border: 1px solid var(--border); }
-
-  @media (max-width: 600px) {
-    .field-row, .field-row.three { grid-template-columns: 1fr; }
-    .container { padding: 16px 16px 80px; }
-  }
+  @media (max-width: 600px) { .field-row, .field-row.three { grid-template-columns: 1fr; } .container { padding: 16px 16px 80px; } }
 </style>
 </head>
 <body>
-
 <header>
   <h1>職務経歴書ジェネレーター</h1>
-  <span class="badge">AI自動生成</span>
+  <span class="badge">Word自動出力</span>
 </header>
-
 <div class="container">
-
-  <!-- 基本情報 -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">1</span> 候補者の基本情報
-    </div>
-
+    <div class="section-title"><span class="num">1</span> 候補者の基本情報</div>
     <div class="field-row">
-      <div class="field">
-        <label>氏名<span class="req">*</span></label>
-        <input type="text" id="name" placeholder="例：山田 太郎">
-      </div>
-      <div class="field">
-        <label>フリガナ</label>
-        <input type="text" id="kana" placeholder="例：ヤマダ タロウ">
-      </div>
+      <div class="field"><label>氏名<span class="req">*</span></label><input type="text" id="name" placeholder="例：田中 一郎"></div>
+      <div class="field"><label>フリガナ</label><input type="text" id="kana" placeholder="例：タナカ イチロウ"></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>生年月日</label>
-        <input type="text" id="birthday" placeholder="例：1990年4月1日">
-      </div>
-      <div class="field">
-        <label>性別</label>
-        <select id="gender">
-          <option value="">選択してください</option>
-          <option value="男性">男性</option>
-          <option value="女性">女性</option>
-          <option value="回答しない">回答しない</option>
-        </select>
-      </div>
+      <div class="field"><label>生年月日</label><input type="text" id="birthday" placeholder="例：1992年6月15日"></div>
+      <div class="field"><label>性別</label><select id="gender"><option value="">選択</option><option value="男性">男性</option><option value="女性">女性</option><option value="回答しない">回答しない</option></select></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>電話番号</label>
-        <input type="tel" id="phone" placeholder="例：090-1234-5678">
-      </div>
-      <div class="field">
-        <label>メールアドレス</label>
-        <input type="email" id="email" placeholder="例：sample@email.com">
-      </div>
+      <div class="field"><label>電話番号</label><input type="tel" id="phone" placeholder="例：090-1234-5678"></div>
+      <div class="field"><label>メールアドレス</label><input type="email" id="email" placeholder="例：sample@email.com"></div>
     </div>
-    <div class="field-row full">
-      <div class="field">
-        <label>現住所</label>
-        <input type="text" id="address" placeholder="例：東京都○○区○○">
-      </div>
-    </div>
+    <div class="field-row full"><div class="field"><label>現住所</label><input type="text" id="address" placeholder="例：東京都○○区○○"></div></div>
   </div>
 
-  <!-- 学歴 -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">2</span> 学歴
+    <div class="section-title"><span class="num">2</span> 学歴</div>
+    <div class="field-row three">
+      <div class="field"><label>高校名</label><input type="text" id="hs-name" placeholder="例：○○高等学校"></div>
+      <div class="field"><label>卒業年月</label><input type="text" id="hs-grad" placeholder="例：2011年3月"></div>
+      <div class="field"><label>学科</label><input type="text" id="hs-dept" placeholder="例：普通科"></div>
     </div>
     <div class="field-row three">
-      <div class="field">
-        <label>高校名</label>
-        <input type="text" id="hs-name" placeholder="例：○○高等学校">
-      </div>
-      <div class="field">
-        <label>卒業年月</label>
-        <input type="text" id="hs-grad" placeholder="例：2015年3月">
-      </div>
-      <div class="field">
-        <label>学科</label>
-        <input type="text" id="hs-dept" placeholder="例：普通科">
-      </div>
-    </div>
-    <div class="field-row three">
-      <div class="field">
-        <label>大学・専門学校名</label>
-        <input type="text" id="univ-name" placeholder="例：○○大学">
-      </div>
-      <div class="field">
-        <label>卒業年月</label>
-        <input type="text" id="univ-grad" placeholder="例：2019年3月">
-      </div>
-      <div class="field">
-        <label>学部・学科</label>
-        <input type="text" id="univ-dept" placeholder="例：経済学部 経営情報学科">
-      </div>
+      <div class="field"><label>大学・専門学校名</label><input type="text" id="univ-name" placeholder="例：○○大学"></div>
+      <div class="field"><label>卒業年月</label><input type="text" id="univ-grad" placeholder="例：2015年3月"></div>
+      <div class="field"><label>学部・学科</label><input type="text" id="univ-dept" placeholder="例：経済学部 経営学科"></div>
     </div>
   </div>
 
-  <!-- 免許・資格 -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">3</span> 免許・資格
-    </div>
-    <div class="field-row full">
-      <div class="field">
-        <label>保有資格<span class="hint">（複数ある場合は改行して入力）</span></label>
-        <textarea id="qualifications" rows="3" placeholder="例：
-普通自動車第一種免許（2018年4月）
-損害保険募集人資格（2019年4月）"></textarea>
-      </div>
-    </div>
+    <div class="section-title"><span class="num">3</span> 免許・資格</div>
+    <div class="field-row full"><div class="field"><label>保有資格<span class="hint">（複数ある場合は改行して入力）</span></label><textarea id="qualifications" rows="3" placeholder="例：普通自動車第一種免許（2010年4月）"></textarea></div></div>
   </div>
 
-  <!-- 職歴 -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">4</span> 職務経歴
-      <span style="font-size:11px; color:var(--muted); font-weight:400; margin-left:auto">古い順に入力してください</span>
-    </div>
-
+    <div class="section-title"><span class="num">4</span> 職務経歴<span style="font-size:11px; color:var(--muted); font-weight:400; margin-left:auto">古い順に入力してください</span></div>
     <div id="companies-container"></div>
-
     <button class="btn-add" onclick="addCompany()">＋ 会社を追加する</button>
   </div>
 
-  <!-- スキル -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">5</span> 活かせる経験・スキル
-    </div>
+    <div class="section-title"><span class="num">5</span> 活かせる経験・スキル</div>
     <div id="skills-container"></div>
     <button class="btn-add" onclick="addSkill()" style="margin-top:4px">＋ スキルを追加する</button>
   </div>
 
-  <!-- 志望動機・自己PR -->
   <div class="section-card">
-    <div class="section-title">
-      <span class="num">6</span> 自己PR・転職理由
-      <span style="font-size:11px; color:var(--muted); font-weight:400; margin-left:auto">AIが文章化します。箇条書きでもOK</span>
-    </div>
-    <div class="field-row full">
-      <div class="field">
-        <label>転職理由・志望動機のメモ<span class="hint">（走り書きでOK）</span></label>
-        <textarea id="motivation" rows="3" placeholder="例：営業職からキャリアアップしたい、マネジメント経験を活かしたい、など"></textarea>
-      </div>
-    </div>
-    <div class="field-row full">
-      <div class="field">
-        <label>希望条件</label>
-        <input type="text" id="conditions" placeholder="例：マネージャー職、年収○○万以上、フルリモート希望 など">
-      </div>
-    </div>
+    <div class="section-title"><span class="num">6</span> 自己PR・転職理由<span style="font-size:11px; color:var(--muted); font-weight:400; margin-left:auto">AIが文章化します</span></div>
+    <div class="field-row full"><div class="field"><label>転職理由・志望動機のメモ<span class="hint">（走り書きでOK）</span></label><textarea id="motivation" rows="3" placeholder="例：マネジメント経験を活かしてキャリアアップしたい"></textarea></div></div>
+    <div class="field-row full"><div class="field"><label>希望条件</label><input type="text" id="conditions" placeholder="例：マネージャー職、年収○○万以上"></div></div>
   </div>
 
-  <!-- 生成ボタン -->
   <div class="generate-section">
-    <h3>入力が完了したら職務経歴書を生成</h3>
-    <p>ボタンを押すとプロンプトがコピーされます。そのままClaude.aiに貼り付けてください。</p>
-    <button class="btn-generate" onclick="generateResume()">✦ プロンプトをコピーしてClaudeで生成</button>
+    <h3>入力完了後、Wordファイルを自動生成します</h3>
+    <p>AIが職務経歴書を生成し、御社フォーマットのWordファイルをダウンロードします</p>
+    <button class="btn-generate" id="main-btn" onclick="generateResume()">✦ 職務経歴書を生成してWordでダウンロード</button>
   </div>
 
-  <!-- 出力エリア -->
   <div id="output-section">
     <div class="output-card">
-      <div class="output-header">
-        <h3>✦ 次のステップ</h3>
-      </div>
+      <div class="output-header"><h3 id="output-title">✦ 生成中...</h3></div>
       <div id="output-text"></div>
     </div>
   </div>
-
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/9.3.0/docx.umd.min.js"></script>
 <script>
 let companyCount = 0;
 let skillCount = 0;
-let generatedText = '';
 
 function addCompany() {
   companyCount++;
@@ -537,98 +147,42 @@ function addCompany() {
       ${n > 1 ? `<button class="btn-remove" onclick="removeCompany(${n})">削除</button>` : ''}
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>会社名<span class="req">*</span></label>
-        <input type="text" id="c${n}-name" placeholder="例：株式会社サンプル人材">
-      </div>
-      <div class="field">
-        <label>事業内容</label>
-        <input type="text" id="c${n}-biz" placeholder="例：人材派遣・人材紹介">
-      </div>
+      <div class="field"><label>会社名<span class="req">*</span></label><input type="text" id="c${n}-name" placeholder="例：株式会社○○"></div>
+      <div class="field"><label>事業内容</label><input type="text" id="c${n}-biz" placeholder="例：人材紹介"></div>
     </div>
     <div class="field-row three">
-      <div class="field">
-        <label>設立年</label>
-        <input type="text" id="c${n}-founded" placeholder="例：1973年">
-      </div>
-      <div class="field">
-        <label>資本金</label>
-        <input type="text" id="c${n}-capital" placeholder="例：22億7300万円">
-      </div>
-      <div class="field">
-        <label>従業員数</label>
-        <input type="text" id="c${n}-employees" placeholder="例：78,119名">
-      </div>
+      <div class="field"><label>設立年</label><input type="text" id="c${n}-founded" placeholder="例：2004年"></div>
+      <div class="field"><label>資本金</label><input type="text" id="c${n}-capital" placeholder="例：1億円"></div>
+      <div class="field"><label>従業員数</label><input type="text" id="c${n}-employees" placeholder="例：100名"></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>在籍期間<span class="req">*</span></label>
-        <input type="text" id="c${n}-period" placeholder="例：2022年5月〜現在">
-      </div>
-      <div class="field">
-        <label>部署・役職</label>
-        <input type="text" id="c${n}-dept" placeholder="例：関東営業部 東京オフィス / チームリーダー">
-      </div>
+      <div class="field"><label>在籍期間<span class="req">*</span></label><input type="text" id="c${n}-period" placeholder="例：2020年4月〜2023年3月"></div>
+      <div class="field"><label>部署・役職</label><input type="text" id="c${n}-dept" placeholder="例：営業部 マネージャー"></div>
     </div>
     <div class="field-row full">
-      <div class="field">
-        <label>主な業務内容<span class="req">*</span><span class="hint">（箇条書きでOK）</span></label>
-        <textarea id="c${n}-duties" rows="4" placeholder="例：
-・法人向け新規営業（架電・飛び込み）
-・人材派遣スタッフ85名の継続就業フォロー
-・グループ商材（中途採用・ハイクラス紹介）のトスアップ
-・チームリーダーとして部下3名のKPI管理"></textarea>
-      </div>
+      <div class="field"><label>主な業務内容<span class="req">*</span><span class="hint">（箇条書きでOK）</span></label>
+      <textarea id="c${n}-duties" rows="4" placeholder="例：&#10;・新規法人営業（架電・飛び込み）&#10;・チームメンバー5名のKPI管理&#10;・売上目標達成のための施策立案"></textarea></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>担当顧客・ターゲット層</label>
-        <input type="text" id="c${n}-target" placeholder="例：地場中小企業、地方銀行、大手企業支店">
-      </div>
-      <div class="field">
-        <label>担当商材・サービス</label>
-        <input type="text" id="c${n}-product" placeholder="例：人材派遣、中途採用紹介、紹介予定派遣">
-      </div>
+      <div class="field"><label>担当顧客・ターゲット層</label><input type="text" id="c${n}-target" placeholder="例：中小企業 経営者層"></div>
+      <div class="field"><label>担当商材・サービス</label><input type="text" id="c${n}-product" placeholder="例：人材紹介サービス"></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>売上規模</label>
-        <input type="text" id="c${n}-sales" placeholder="例：既存85件・月約2,975万円">
-      </div>
-      <div class="field">
-        <label>チーム・職場規模</label>
-        <input type="text" id="c${n}-team" placeholder="例：オフィス10名、うち営業4名">
-      </div>
+      <div class="field"><label>売上規模</label><input type="text" id="c${n}-sales" placeholder="例：月1,000万円"></div>
+      <div class="field"><label>チーム規模</label><input type="text" id="c${n}-team" placeholder="例：10名"></div>
     </div>
     <div class="field-row full">
-      <div class="field">
-        <label>実績・数字<span class="req">*</span><span class="hint">（できるだけ数字で）</span></label>
-        <textarea id="c${n}-results" rows="3" placeholder="例：
-・予算比103%、対前年比106%達成
-・2024年度パーソルグループ内グループ商材販売数2位
-・2025年チームリーダー（課長補佐）昇進"></textarea>
-      </div>
+      <div class="field"><label>実績・数字<span class="req">*</span></label>
+      <textarea id="c${n}-results" rows="3" placeholder="例：&#10;・予算比120%達成&#10;・新規開拓で月10件のアポ獲得"></textarea></div>
     </div>
     <div class="field-row full">
-      <div class="field">
-        <label>工夫したこと・強みとして伝えたいこと<span class="hint">（AIが文章化します）</span></label>
-        <textarea id="c${n}-points" rows="3" placeholder="例：
-・スタッフに寄り添う姿勢で長期就業率を高めた
-・新規開拓では日当たりの行動管理を徹底
-・表彰される実績づくりを常に意識"></textarea>
-      </div>
+      <div class="field"><label>工夫したこと・強み<span class="hint">（AIが文章化します）</span></label>
+      <textarea id="c${n}-points" rows="3" placeholder="例：&#10;・顧客の課題を深掘りするヒアリングを重視&#10;・チームの生産性向上のため業務フローを改善"></textarea></div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>退職理由</label>
-        <input type="text" id="c${n}-reason" placeholder="例：一身上の都合（スキルアップのため）">
-      </div>
-      <div class="field">
-        <label>昇進・昇格歴</label>
-        <input type="text" id="c${n}-promotion" placeholder="例：2020年主任、2021年係長">
-      </div>
-    </div>
-  `;
+      <div class="field"><label>退職理由</label><input type="text" id="c${n}-reason" placeholder="例：キャリアアップのため"></div>
+      <div class="field"><label>昇進・昇格歴</label><input type="text" id="c${n}-promotion" placeholder="例：2022年4月 マネージャーに昇進"></div>
+    </div>`;
   container.appendChild(div);
 }
 
@@ -645,10 +199,9 @@ function addSkill() {
   div.className = 'skill-row';
   div.id = `skill-${n}`;
   div.innerHTML = `
-    <input type="text" id="s${n}-title" placeholder="例：迅速なレスポンス対応" style="width:180px; flex-shrink:0">
-    <input type="text" id="s${n}-desc" placeholder="詳細（例：お客様からの問い合わせ一次対応はスピードが命と考え、即日返答を徹底）">
-    <button class="btn-skill-remove" onclick="removeSkill(${n})">×</button>
-  `;
+    <input type="text" id="s${n}-title" placeholder="例：マネジメントスキル" style="width:180px; flex-shrink:0">
+    <input type="text" id="s${n}-desc" placeholder="詳細（例：10名のチームをマネジメントし、売上目標を達成）">
+    <button class="btn-skill-remove" onclick="removeSkill(${n})">×</button>`;
   container.appendChild(div);
 }
 
@@ -662,24 +215,25 @@ function getVal(id) {
   return el ? el.value.trim() : '';
 }
 
-function generateResume() {
-  const btn = document.querySelector('.btn-generate');
+async function generateResume() {
+  const btn = document.getElementById('main-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ AIが生成中...';
+
+  const outputSection = document.getElementById('output-section');
+  outputSection.classList.add('visible');
+  const outputText = document.getElementById('output-text');
+  outputText.innerHTML = '<div class="loading"><span class="spinner"></span>AIが職務経歴書を作成しています（30秒ほどかかります）...</div>';
+  outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   const data = {
-    name: getVal('name'),
-    kana: getVal('kana'),
-    birthday: getVal('birthday'),
-    gender: getVal('gender'),
-    phone: getVal('phone'),
-    email: getVal('email'),
+    name: getVal('name'), kana: getVal('kana'), birthday: getVal('birthday'),
+    gender: getVal('gender'), phone: getVal('phone'), email: getVal('email'),
     address: getVal('address'),
     hs: { name: getVal('hs-name'), grad: getVal('hs-grad'), dept: getVal('hs-dept') },
     univ: { name: getVal('univ-name'), grad: getVal('univ-grad'), dept: getVal('univ-dept') },
-    qualifications: getVal('qualifications'),
-    motivation: getVal('motivation'),
-    conditions: getVal('conditions'),
-    companies: [],
-    skills: []
+    qualifications: getVal('qualifications'), motivation: getVal('motivation'),
+    conditions: getVal('conditions'), companies: [], skills: []
   };
 
   for (let i = 1; i <= companyCount; i++) {
@@ -706,115 +260,199 @@ function generateResume() {
     if (title) data.skills.push({ title, desc });
   }
 
-  const prompt = buildPrompt(data);
-
-  navigator.clipboard.writeText(prompt).then(() => {
-    const outputSection = document.getElementById('output-section');
-    outputSection.classList.add('visible');
-    const outputText = document.getElementById('output-text');
-    outputText.innerHTML = `
-      <div style="padding:24px; line-height:2;">
-        <p style="font-size:15px; font-weight:500; color:#1a1a2e; margin-bottom:16px">✅ プロンプトをコピーしました！</p>
-        <p style="font-size:14px; margin-bottom:12px">次の手順で職務経歴書を生成してください：</p>
-        <ol style="font-size:14px; padding-left:20px; line-height:2.2;">
-          <li><a href="https://claude.ai" target="_blank" style="color:#0f3460; font-weight:500;">claude.ai</a> を新しいタブで開く</li>
-          <li>チャット欄に <strong>Command + V</strong> で貼り付け</li>
-          <li>Enterを押して送信</li>
-          <li>生成された内容をコピーしてWordなどに貼り付け</li>
-        </ol>
-        <div style="margin-top:16px;">
-          <button onclick="navigator.clipboard.writeText(window._prompt).then(()=>this.textContent='コピーしました！')" 
-            style="background:#0f3460;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;">
-            もう一度コピー
-          </button>
-        </div>
-      </div>`;
-    window._prompt = prompt;
-    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    btn.textContent = '✅ コピー済み！Claude.aiに貼り付けてください';
-    setTimeout(() => btn.textContent = '✦ プロンプトをコピーしてClaudeで生成', 3000);
-  }).catch(() => {
-    alert('コピーに失敗しました。もう一度お試しください。');
-  });
-}
-
-function buildPrompt(d) {
   const today = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
-
   let companiesText = '';
-  d.companies.forEach((co, idx) => {
-    companiesText += `
-【第${idx + 1}社目】
-会社名：${co.name}
-事業内容：${co.biz}
-会社規模：設立${co.founded} 資本金${co.capital} 従業員数${co.employees}
-在籍期間：${co.period}
-部署・役職：${co.dept}
-業務内容：${co.duties}
-担当顧客：${co.target}
-商材：${co.product}
-売上規模：${co.sales}
-チーム規模：${co.team}
-実績：${co.results}
-工夫・ポイント：${co.points}
-退職理由：${co.reason}
-昇進歴：${co.promotion}
-`;
+  data.companies.forEach((co, idx) => {
+    companiesText += `【第${idx+1}社目】\n会社名：${co.name}\n事業内容：${co.biz}\n会社規模：設立${co.founded} 資本金${co.capital} 従業員数${co.employees}\n在籍期間：${co.period}\n部署・役職：${co.dept}\n業務内容：${co.duties}\n担当顧客：${co.target}\n商材：${co.product}\n売上規模：${co.sales}\nチーム規模：${co.team}\n実績：${co.results}\n工夫・ポイント：${co.points}\n退職理由：${co.reason}\n昇進歴：${co.promotion}\n\n`;
   });
+  let skillsText = data.skills.map(s => `・${s.title}：${s.desc}`).join('\n');
 
-  let skillsText = '';
-  d.skills.forEach(s => {
-    skillsText += `・${s.title}：${s.desc}\n`;
-  });
-
-  return `あなたは人材紹介会社のプロのキャリアアドバイザーです。以下の情報をもとに、企業の採用担当者に強く刺さる高品質な職務経歴書を作成してください。
+  const prompt = `あなたは人材紹介会社のプロのキャリアアドバイザーです。以下の情報をもとに職務経歴書を作成してください。
 
 【候補者情報】
-氏名：${d.name}（${d.kana}）
-生年月日：${d.birthday} ${d.gender}
-電話：${d.phone}
-メール：${d.email}
-住所：${d.address}
+氏名：${data.name}（${data.kana}）/ 生年月日：${data.birthday} ${data.gender}
+電話：${data.phone} / メール：${data.email} / 住所：${data.address}
 
 【学歴】
-高校：${d.hs.name} ${d.hs.dept} ${d.hs.grad}卒業
-大学：${d.univ.name} ${d.univ.dept} ${d.univ.grad}卒業
+高校：${data.hs.name} ${data.hs.dept} ${data.hs.grad}卒業
+大学：${data.univ.name} ${data.univ.dept} ${data.univ.grad}卒業
 
-【免許・資格】
-${d.qualifications}
+【免許・資格】${data.qualifications}
 
-【職歴】
-${companiesText}
+【職歴】${companiesText}
 
-【活かせるスキル】
-${skillsText}
+【スキル】${skillsText}
 
-【転職理由・動機メモ】
-${d.motivation}
-
-【希望条件】
-${d.conditions}
+【転職理由】${data.motivation}
+【希望条件】${data.conditions}
 
 ---
-
-以下の形式・ルールに従って職務経歴書を作成してください：
-
-1. 冒頭に「職務経歴書」タイトルと日付（${today}）、氏名を記載
-2. 【職歴要約】セクション：2〜3段落で候補者の強みと経歴を簡潔に紹介（採用担当者が最初に読む部分）
-3. 各社ごとに以下の構成で詳細を記載：
-   - 会社基本情報（事業内容・設立・資本金・従業員数）
-   - 在籍期間と部署・役職
-   - 【業務内容】（箇条書きで具体的に）
-   - 【担当顧客・商材・売上規模】
-   - 【実績】（数字を活かして具体的に）
-   - 【ポイント】（工夫したことや強みを2〜3点）
-4. 【活かせる経験・知識・技術】セクション
-5. 全体を通じて数字・具体性を重視し、採用担当者が読みやすい表現にしてください
-6. 敬体（です・ます調）で統一
-7. 転職理由は自然に前向きな表現に整えてください`;
+以下のJSON形式で出力してください（コードブロックなし、JSONのみ）:
+{
+  "summary": "職歴要約（2〜3段落、改行は\\nで表現）",
+  "companies": [
+    {
+      "name": "会社名",
+      "biz": "事業内容",
+      "founded": "設立年",
+      "capital": "資本金",
+      "employees": "従業員数",
+      "period": "在籍期間",
+      "dept": "部署・役職",
+      "duties": ["業務内容1", "業務内容2"],
+      "target": "担当顧客",
+      "product": "商材",
+      "sales": "売上規模",
+      "results": ["実績1", "実績2"],
+      "points": ["ポイント1", "ポイント2", "ポイント3"]
+    }
+  ],
+  "skills": ["スキル1の説明", "スキル2の説明"],
+  "pr": "自己PR（改行は\\nで表現）"
 }
 
+ルール：数字・具体性を重視、敬体で統一、転職理由は前向きに整える。日付は${today}。`;
 
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const result = await response.json();
+    const text = result.content[0].text;
+    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    await generateDocx(data, parsed, today);
+    document.getElementById('output-title').textContent = '✅ 生成完了！Wordファイルをダウンロードしました';
+    outputText.innerHTML = `<div style="padding:24px; line-height:2;">
+      <p style="font-size:14px; color:#1a1a2e; margin-bottom:12px">職務経歴書のWordファイルがダウンロードされました。</p>
+      <p style="font-size:13px; color:#888;">ダウンロードされない場合は再度ボタンを押してください。</p>
+      <div style="margin-top:16px;">
+        <button onclick="generateResume()" style="background:#0f3460;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;">再生成する</button>
+      </div>
+    </div>`;
+  } catch(e) {
+    outputText.innerHTML = `<div style="padding:24px; color:red;">エラーが発生しました。もう一度お試しください。<br><small>${e.message}</small></div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ 職務経歴書を生成してWordでダウンロード';
+}
+
+async function generateDocx(data, parsed, today) {
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, BorderStyle, WidthType, ShadingType } = docx;
+
+  const border = { style: BorderStyle.SINGLE, size: 1, color: '000000' };
+  const borders = { top: border, bottom: border, left: border, right: border };
+
+  function t(text, opts = {}) {
+    return new TextRun({ text: String(text || ''), font: 'MS Mincho', size: 20, ...opts });
+  }
+
+  function para(text, opts = {}) {
+    return new Paragraph({ children: [t(text, opts)], spacing: { after: 80 } });
+  }
+
+  function multiLinePara(text, opts = {}) {
+    const lines = String(text || '').split('\n');
+    const children = [];
+    lines.forEach((line, i) => {
+      children.push(t(line, opts));
+      if (i < lines.length - 1) children.push(new TextRun({ break: 1 }));
+    });
+    return new Paragraph({ children, spacing: { after: 100 } });
+  }
+
+  const children = [
+    new Paragraph({
+      children: [t('職務経歴書', { bold: true, size: 32 })],
+      alignment: AlignmentType.CENTER, spacing: { after: 160 }
+    }),
+    new Paragraph({
+      children: [t(`${today}　　氏名：${data.name}`)],
+      alignment: AlignmentType.RIGHT, spacing: { after: 240 }
+    }),
+    para('【職歴要約】', { bold: true }),
+    multiLinePara(parsed.summary),
+    new Paragraph({ children: [], spacing: { after: 200 } }),
+  ];
+
+  for (const co of parsed.companies) {
+    children.push(
+      para(`${co.name}　事業内容：${co.biz}`),
+      para(`設立：${co.founded}　資本金：${co.capital}　従業員数：${co.employees}`, { size: 18 }),
+    );
+
+    const contentLines = [
+      co.dept || '',
+      '',
+      '【業務内容】',
+      ...(co.duties || []).map(d => `・${d}`),
+      '',
+      '【担当顧客・商材・売上規模】',
+      `・担当顧客：${co.target || ''}`,
+      `・商材：${co.product || ''}`,
+      `・売上規模：${co.sales || ''}`,
+      '',
+      '【実績】',
+      ...(co.results || []).map(r => `・${r}`),
+      '',
+      '【ポイント】',
+      ...(co.points || []).map(p => `・${p}`),
+    ];
+
+    children.push(
+      new Table({
+        width: { size: 9200, type: WidthType.DXA },
+        columnWidths: [2000, 7200],
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({ borders, width: { size: 2000, type: WidthType.DXA }, shading: { fill: 'D9D9D9', type: ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 120, right: 120 }, children: [para('期間', { bold: true })] }),
+              new TableCell({ borders, width: { size: 7200, type: WidthType.DXA }, shading: { fill: 'D9D9D9', type: ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 120, right: 120 }, children: [para('業務内容', { bold: true })] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ borders, width: { size: 2000, type: WidthType.DXA }, margins: { top: 80, bottom: 80, left: 120, right: 120 }, children: [para(co.period || '')] }),
+              new TableCell({ borders, width: { size: 7200, type: WidthType.DXA }, margins: { top: 80, bottom: 80, left: 120, right: 120 },
+                children: contentLines.map(line => new Paragraph({ children: [t(line)], spacing: { after: 30 } }))
+              })
+            ]
+          })
+        ]
+      }),
+      new Paragraph({ children: [], spacing: { after: 200 } })
+    );
+  }
+
+  children.push(
+    para('■自己PR', { bold: true }),
+    multiLinePara(parsed.pr),
+    new Paragraph({ children: [t('以上')], alignment: AlignmentType.RIGHT, spacing: { before: 200 } })
+  );
+
+  const doc = new Document({
+    sections: [{
+      properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1080, right: 1080, bottom: 1080, left: 1080 } } },
+      children
+    }]
+  });
+
+  const buffer = await Packer.toBuffer(doc);
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `職務経歴書_${data.name || '候補者'}.docx`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 // 初期化
 addCompany();
